@@ -77,7 +77,6 @@ function add(html, who) {
   window.scrollTo(0, document.body.scrollHeight);
 }
 
-// very light sanitization for demo purposes
 function sanitize(s) {
   return String(s).replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
 }
