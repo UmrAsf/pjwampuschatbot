@@ -1,0 +1,4 @@
+Aliases:
+pjwampus = Project West Campus
+projectwampus = Project West Campus
+pwc = Project West Campus
