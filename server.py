@@ -26,8 +26,8 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-# max number of requests per RATE_LIMIT_WINDOW_SEC per IP (default: 20)
-RATE_LIMIT_REQ_PER_TIME = int(os.getenv("RATE_LIMIT_REQ_PER_MIN", "20"))
+# max number of requests per RATE_LIMIT_WINDOW_SEC per IP
+RATE_LIMIT_REQ_PER_TIME = 20
 # time window for rate limit in seconds
 RATE_LIMIT_WINDOW_SEC = 60
 # stores request timestamps per IP address
