@@ -65,7 +65,7 @@ except Exception as e:
 llm = ChatOpenAI(
     model="gpt-4o",
     temperature=0,
-    request_timeout=30,
+    request_timeout=10,
     max_retries=2
 )
 
