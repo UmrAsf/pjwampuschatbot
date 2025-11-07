@@ -10,13 +10,13 @@ source .venv/bin/activate
 2. Install the required Python packages from requirements.txt
 pip install -r requirements.txt
 
-3. Create a file called .env in the folder and put your OpenAI API key inside it 
+3. Create a file called .env and put OpenAI API key inside (look at .env.example as an example): 
 OPENAI_API_KEY=your-key-here
 
 5. Run the ingest.py file to load the text files into the chatbot
 python ingest.py
 
-6. Start the backend server
+6. Start the backend server in Terminal:
 uvicorn server:app --reload
 
 7. Open the index.html file in a browser and chat with the bot
