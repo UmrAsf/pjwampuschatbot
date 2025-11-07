@@ -1,4 +1,6 @@
 Project West Campus Chatbot (Prototype)
+Only works locally so far with local text files for context (/data)
+index.html just for visuals not actual final layout
 
 How to Run This Project
 1. Create and activate a virtual environment
@@ -21,3 +23,7 @@ uvicorn server:app --reload
 
 Stopping the Server
 - Ctrl + C in the terminal
+
+Future Plans:
+Use Pinecone API for better vector database
+Speed up response time
