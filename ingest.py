@@ -30,8 +30,8 @@ if __name__ == "__main__":
 
     # split texts into chunks (500 characters; 60 character overlap) for processing
     splitter = RecursiveCharacterTextSplitter(
-        chunk_size=500,
-        chunk_overlap=60
+        chunk_size=350,
+        chunk_overlap=40
     )
 
     # split the document into chunks

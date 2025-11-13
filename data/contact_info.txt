@@ -1,0 +1,10 @@
+Contact Information
+
+Communication channels may vary.
+Common methods include:
+- Volunteer group chats
+- Email lists
+- Social media announcements
+
+If no contact information is available in context, the chatbot replies:
+"Contact details are not in the context."

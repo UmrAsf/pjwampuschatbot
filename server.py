@@ -83,18 +83,9 @@ def normalize_aliases(text: str) -> str:
             t = t.replace(k, v.lower())
     return t
 
-# chatbot personality and instructions (should be very specific)
-SYSTEM_MESSAGE = (
-    "You are a helpful information chatbot for Project West Campus, a student-led group "
-    "that helps feed unhoused neighbors in the West Campus community. "
-    "Answer using ONLY the context provided. "
-    "If the context does not contain the answer, reply: "
-    "'I don’t have that information yet.' "
-    "Do NOT mention that you rely on context. "
-    "Be friendly, concise (2–4 sentences), and focused on volunteer information. "
-    "Do NOT include a 'Sources:' section or citations — the system will add sources."
-    "If isn't in context, say 'Not in context.'"
-)
+# Load System Message from external file
+with open("System_Message.txt", "r", encoding="utf-8") as f:
+    SYSTEM_MESSAGE = f.read()
 
 # expected structure of requests
 class AskReq(BaseModel):
