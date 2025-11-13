@@ -1,8 +1,8 @@
 import os, glob, time
 from dotenv import load_dotenv
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.vectorstores import FAISS
 from langchain_openai import OpenAIEmbeddings
+from langchain_pinecone import PineconeVectorStore
 
 # variables from .env
 load_dotenv()
@@ -24,25 +24,34 @@ def load_local_texts():
 
 if __name__ == "__main__":
     docs = load_local_texts()
-    #check for data files
+    # check for data files (since we aren't web scraping YET)
     if not docs:
         raise SystemExit("No .txt files in /data. Add them first.")
 
-    #split texts into chunks (500 characters; 60 character overlap) for processing
+    # split texts into chunks (500 characters; 60 character overlap) for processing
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=500,
         chunk_overlap=60
     )
 
-    #split the document into chunks
+    # split the document into chunks
     chunks, metas = [], []
     for text, source in docs:
         for c in splitter.split_text(text):
             chunks.append(c)
             metas.append({"source": source})
 
-    #text chunks to vectors
+    if not chunks:
+        raise SystemExit("No text chunks created from input files.")
+
+    # text chunks to vectors
     embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
-    #store if FAISS local database
-    db = FAISS.from_texts(chunks, embeddings, metadatas=metas)
-    db.save_local("vectordb")
+
+    # store in Pinecone vector database and upsert all chunks into the index
+    start = time.time()
+    PineconeVectorStore.from_texts(
+        texts=chunks,
+        embedding=embeddings,
+        metadatas=metas,
+        index_name="projectwampus"
+    )

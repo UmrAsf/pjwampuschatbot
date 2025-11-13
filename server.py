@@ -8,14 +8,14 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from langchain_community.vectorstores import FAISS
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+from langchain_pinecone import PineconeVectorStore
 from langchain.schema import SystemMessage, HumanMessage
 
 # variables from .env
 load_dotenv()
 
-#FastAPI instance
+# FastAPI instance
 app = FastAPI(title="Project West Campus Chatbot")
 
 # accesible from anywhere
@@ -51,16 +51,15 @@ def check_rate_limit(ip: str):
 
 embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
 
-# load FAISS vector database
+# load Pinecone vector database
 try:
-    vectordb = FAISS.load_local(
-        "vectordb",
-        embeddings=embeddings,
-        allow_dangerous_deserialization=True
+    vectordb = PineconeVectorStore.from_existing_index(
+        index_name="projectwampus",
+        embedding=embeddings
     )
 except Exception as e:
-    # if FAISS database doesn't exist
-    raise RuntimeError("Run `python ingest.py` first to build embeddings") from e
+    # Pinecone index errors
+    raise RuntimeError("Connect to your Pinecone index and run `python ingest.py` at least once.") from e
 
 # initialization of LLM
 llm = ChatOpenAI(
@@ -86,7 +85,6 @@ def normalize_aliases(text: str) -> str:
 
 # chatbot personality and instructions (should be very specific)
 SYSTEM_MESSAGE = (
-    
     "You are a helpful information chatbot for Project West Campus, a student-led group "
     "that helps feed unhoused neighbors in the West Campus community. "
     "Answer using ONLY the context provided. "
@@ -96,7 +94,6 @@ SYSTEM_MESSAGE = (
     "Be friendly, concise (2–4 sentences), and focused on volunteer information. "
     "Do NOT include a 'Sources:' section or citations — the system will add sources."
     "If isn't in context, say 'Not in context.'"
-    
 )
 
 # expected structure of requests
@@ -131,7 +128,7 @@ def ask(req: AskReq, request: Request):
     if len(question) > 500:
         raise HTTPException(400, "Question too long (limit 500 characters).")
 
-    # retrieve relevant documents from FAISS DB
+    # retrieve relevant documents from Pinecone DB
     docs = vectordb.max_marginal_relevance_search(
         question,
         k=max(1, min(req.k, 5)),

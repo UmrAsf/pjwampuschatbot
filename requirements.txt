@@ -8,3 +8,5 @@ tiktoken
 python-dotenv
 beautifulsoup4
 requests
+pinecone-client
+langchain-pinecone
